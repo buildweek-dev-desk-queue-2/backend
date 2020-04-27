@@ -10,6 +10,9 @@ const feedback = require('../routes/tickets/ticket-route');
 const server = express();
 
 server.use(express.json());
+server.use(helmet());
+server.use(cors());
+
 server.use('/', authRoute);
 server.use('/ticket', authenticate, ticket);
 // server.use('/feedback', authenticate, feedback);
