@@ -1,4 +1,4 @@
-const db = require('../../data/migrations/db.js');
+const db = require('../../data/db-config.js');
 
 module.exports = {
     find,
@@ -22,7 +22,6 @@ async function add(ticket) {
 };
 
 function update(changes, id) {
-    console.log(changes)
     return db('tickets')
     .where({id})
     .update(changes);
