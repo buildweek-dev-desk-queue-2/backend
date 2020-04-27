@@ -21,10 +21,11 @@ async function add(ticket) {
         .insert(ticket, 'id')
 };
 
-async function update(id, changes) {
+function update(changes, id) {
+    console.log(changes)
     return db('tickets')
-        .where({id})
-        .update(changes);
+    .where({id})
+    .update(changes);
 }
 
 function remove(id) {

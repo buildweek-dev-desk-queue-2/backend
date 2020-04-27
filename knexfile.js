@@ -7,7 +7,7 @@ module.exports = {
     connection: {
       host: '127.0.0.1',
       user: 'postgres',
-      password: 'your pgAdmin password goes here',
+      password: 'aLgrec82#gajik23r',
       database: 'backend'
     },
     migrations: {
