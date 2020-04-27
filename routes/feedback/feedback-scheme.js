@@ -1,4 +1,4 @@
-const db = require('../../data/migrations/db');
+const db = require('../../data/db-config.js');
 
 module.exports = {
    get,
