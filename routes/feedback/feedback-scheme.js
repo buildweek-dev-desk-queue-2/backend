@@ -13,7 +13,7 @@ function get() {
 function add(item) {
    return db('feedback')
       .insert(item);
-}
+};
 
 function findByTicketId(ticket_id) {
    return db('feedback').where({
