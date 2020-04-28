@@ -1,4 +1,3 @@
-
 exports.up = function(knex) {
     return knex.schema.createTable('users', user => {
         user.increments()
@@ -67,4 +66,4 @@ exports.up = function(knex) {
       .dropTableIfExists('tickets')
       .dropTableIfExists('users')
   };
-  
+
