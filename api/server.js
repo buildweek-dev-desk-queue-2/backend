@@ -17,4 +17,8 @@ server.use('/', authRoute);
 server.use('/ticket', authenticate, ticket);
 // server.use('/feedback', authenticate, feedback);
 
+server.get('/', (req, res) => {
+    res.status(200).json({message: 'server is running'})
+})
+
 module.exports = server;
