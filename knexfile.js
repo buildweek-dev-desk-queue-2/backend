@@ -4,12 +4,10 @@ require('dotenv').config();
 module.exports = {
 
   development: {
-    client: 'pg',
+    client: 'sqlite3',
+    useNullAsDefault: true,
     connection: {
-      host: '127.0.0.1',
-      user: 'postgres',
-      password: process.env.PG_PW,
-      database: 'table'
+      filename: './data/db.db3'
     },
     migrations: {
       directory: './data/migrations'
@@ -18,6 +16,22 @@ module.exports = {
       directory: 'data/seeds'
     }
   },
+
+  // development: {
+  //   client: 'pg',
+  //   connection: {
+  //     host: '127.0.0.1',
+  //     user: 'postgres',
+  //     password: process.env.PG_PW,
+  //     database: 'table'
+  //   },
+  //   migrations: {
+  //     directory: './data/migrations'
+  //   },
+  //   seeds: {
+  //     directory: 'data/seeds'
+  //   }
+  // },
 
   staging: {
     client: 'postgresql',

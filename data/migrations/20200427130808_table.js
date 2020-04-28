@@ -28,7 +28,10 @@ exports.up = function(knex) {
               .references('id')
               .inTable('users')
               .onDelete('CASCADE')
-              .onUpdate('CASCADE')
+              .onUpdate('CASCADE');
+      ticket.integer('completed', 1)
+               .defaultsTo(0)
+               .index();
     })
     .createTable('feedback', feedback => {
       feedback.increments();
@@ -38,21 +41,9 @@ exports.up = function(knex) {
           .references('tickets.id')
           .onDelete('CASCADE')
           .onUpdate('CASCADE');
-      feedback.integer('tech_id', 255)
+      feedback.integer('author_id', 255)
         .notNullable()
-        .index()
         .references('users.id')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE');
-      feedback.string('tech_name', 255)
-        .notNullable()
-        .index()
-        .references('users.username')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE');
-      feedback.string('author', 255)
-        .notNullable()
-        .references('users.username')
         .onDelete('CASCADE')
         .onUpdate('CASCADE');
       feedback.string('message', 255)
