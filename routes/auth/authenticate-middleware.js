@@ -10,6 +10,7 @@ module.exports = (req, res, next) => {
     if(token) {
         jwt.verify(token, secret, (error, decodedToken) => {
             if (error) {
+                console.log(error.message)
                 res.status(401).json({server: 'route unavailable'});
             } else {
                 req.decodedToken = decodedToken;
