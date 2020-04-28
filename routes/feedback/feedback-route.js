@@ -16,6 +16,20 @@ route.get('/', (req, res) => {
       });
 });
 
+route.get('/id/:id', (req, res) => {
+   db.findById(req.params.id)
+      .then(rep => {
+         res.status(200).json({
+            data: rep
+         });
+      })
+      .catch(err => {
+         res.status(500).json({
+            message: `Server error. ${err}`   
+         });
+      });
+});
+
 route.get('/:ticketId', (req, res) => {
    db.findByTicketId(req.params.ticketId)
       .then(rep => {
