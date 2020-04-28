@@ -53,7 +53,7 @@ route.post('/:ticketId', (req, res) => {
    db.add(newFeedback)
    .then(rep => {
       res.status(201).json({
-         data: rep
+         feedbackId: rep
       })
    })
    .catch(err => {
@@ -62,5 +62,35 @@ route.post('/:ticketId', (req, res) => {
       });
    });
 });
+
+route.put('/id/:id', (req, res) => {
+   db.put(req.params.id, req.body)
+   .then(rep => {
+      res.status(200).json({
+         modified: rep
+      });
+   })
+   .catch(err => {
+      res.status(500).json({
+         message: `Server error. ${err}`   
+      });
+   });
+});
+
+route.delete('/id/:id', (req, res) => {
+
+   db.remove(req.params.id)
+   .then(rep => {
+      res.status(200).json({
+         removed: rep
+      });
+   })
+   .catch(err => {
+      res.status(500).json({
+         message: `Server error. ${err}`   
+      });
+   });
+
+})
 
 module.exports = route;
