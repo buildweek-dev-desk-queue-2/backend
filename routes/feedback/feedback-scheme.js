@@ -10,7 +10,10 @@ module.exports = {
 };
 
 function get() {
-   return db('feedback');
+   return db('feedback as f')
+      .join('users as u','f.author_id', 'u.id')
+      .join('tickets as t', 'f.ticket_id', 't.id')
+      .select('f.id as feedback_id', 'u.username as author_name', 'f.ticket_id', 't.title', 'f.message');
 };
 
 function add(item) {
@@ -19,14 +22,22 @@ function add(item) {
 };
 
 function findByTicketId(ticket_id) {
-   return db('feedback').where({
+   return db('feedback as f')
+   .join('users as u','f.author_id', 'u.id')
+   .join('tickets as t', 'f.ticket_id', 't.id')
+   .select('f.id as feedback_id', 'u.username as author_name', 'f.ticket_id', 't.title', 'f.message')
+   .where({
       ticket_id
    });
 };
 
 function findById(id) {
-   return db('feedback').where({
-      id
+   return db('feedback as f')
+   .join('users as u','f.author_id', 'u.id')
+   .join('tickets as t', 'f.ticket_id', 't.id')
+   .select('f.id as feedback_id', 'u.username as author_name', 'f.ticket_id', 't.title', 'f.message')
+   .where({
+      'f.id':id
    });
 }
 
