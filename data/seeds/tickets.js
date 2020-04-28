@@ -8,7 +8,6 @@ exports.seed = function(knex) {
             title: "Can't submit retro",
             description: "I can't submit a retro. The module is missing in the dropdown.",
             user_id: 1,
-            tech_id: 4
          },
          {
             title: "Can't sign in to new slack.",
@@ -24,4 +23,3 @@ exports.seed = function(knex) {
    });
    
 };
- 

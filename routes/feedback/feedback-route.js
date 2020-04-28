@@ -17,7 +17,7 @@ route.get('/', (req, res) => {
 });
 
 route.get('/:ticketId', (req, res) => {
-   db.findByTicketId(ticketId)
+   db.findByTicketId(req.params.ticketId)
       .then(rep => {
          res.status(200).json({
             data: rep
