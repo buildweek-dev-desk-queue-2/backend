@@ -1,5 +1,4 @@
 const test = require('supertest');
-const request = require('supertest')
 const server = require('../../api/server.js');
 const db = require('../../data/db-config.js');
 
@@ -114,49 +113,3 @@ describe('server', function() {
 
 })
 
-describe('biskoi tests', () => {
-
-    let token;
-
-    it('Can register', async() => {
-        await db('users').where({username: 'biskoiTest'}).del();
-        await request(server)
-        .post('/auth/register')
-        .send({
-            username: 'biskoiTest',
-            password: 'password',
-            email: 'bis@email.com'
-        }).then(res => {
-            expect(res.status).toBe(201);
-            expect(res.body).toHaveProperty('id');
-        })
-    })
-
-    it('Login returns token', async() => {
-        const res = await request(server)
-        .post('/auth/login')
-        .send({
-            username: 'biskoiTest',
-            password: 'password'
-        });
-
-        token = res.body.token
-        expect(token).toBeTruthy();
-
-        // console.log(res.body)
-    });
-
-    it('get to /feedback will return feedback data', async() => {
-        const res = await request(server)
-        .get('/feedback')
-        .set('authorization', token);
-        // console.log('res.body', res.body)
-        // console.log('asd')
-        expect(res.body.data[0]).toHaveProperty('feedback_id');
-    });
-
-    // it('can post feedback to a ticket', async() => {
-
-    // })
-
-});
