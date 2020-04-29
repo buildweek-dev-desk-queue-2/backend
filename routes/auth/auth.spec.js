@@ -32,13 +32,8 @@ describe('server', function() {
                 })
         });
     })
-    describe('post /auth/login', function() {
+    describe('post /auth/register', function() {
         it('should return status 201', function() {
-            let token;
-            beforeEach(async() => {
-                const response = await test(server).post('/auth/login').send({username: "jim", password: "gotham"})
-                token = response.body.token
-            })
             return test(server)
                 .post('/auth/login')
                 .send({
@@ -48,7 +43,6 @@ describe('server', function() {
                 .then(res => {
                     expect(res.status).toBe(200)
                     expect(res.body.message).toBe("welcome")
-                    // expect(res.body).toContain(token)
                 })
         });
     })
@@ -69,10 +63,17 @@ describe('server', function() {
 
     describe('get tickets', function() {
         let token;
-        beforeEach(async() => {
-            const response = await test(server).post('/auth/login').send({username: "wildcard", password: "wildcard"})
-            token = response.body.token
-        }) 
+            beforeEach(async() => {
+                const response = await test(server).post('/auth/login').send({username: "jim", password: "gotham"})
+                token = response.body.token
+        test(server)
+            .post('/auth/login')
+            .send({
+                username: "jim",
+                password: "gotham"
+            })
+            
+    })
         it('should return error', function() {
             return test(server)
                 .get('/ticket')
@@ -81,35 +82,141 @@ describe('server', function() {
                     expect(res.body.message).toBe('invalid creds')
                 })
         })
-        it('should return message invalid creds', function() {
+        it('should return status 200', function() {
             return test(server)
                 .get('/ticket')
-                .set('Authorization', `Bearer ${token}`)
+                .set({Authorization: token})
                 .then(res => {
                     console.log(token)
-                    expect(res.status).toBe(401)
+                    expect(res.status).toBe(200)
                 })
         })
-    })
-    describe('tickets endpoint', function() {     
-        it('should post a ticket', function() {
-            let token;
-            beforeEach(async() => {
-                const response = await test(server).post('/auth/login').send({username: "wildcard2", password: "wildcard"})
-                token = response.body.token
-            }) 
-            return test(server)
+    
+    it('it should create a new ticket', function() {
+        return test(server)
             .post('/ticket')
+            .set({Authorization: token})
             .send({
                 title: "flex",
                 description: "I need to flex this unit",
                 user_id: 1
             })
             .then(res => {
-                expect(res.body.message).toBe("invalid creds")
+                expect(res.status).toBe(201)
             })
-        })
-
+    })
+    it('it should return an error', function() {
+        return test(server)
+            .post('/ticket')
+            .set({Authorization: token})
+            .send({
+                title: "flex",
+                user_id: 1
+            })
+            .then(res => {
+                expect(res.status).toBe(500)
+            })
+    })
+    it('should view a ticket', function() {
+        return test(server)
+            .get('/ticket/7')
+            .set({Authorization: token})
+            .then(res => {
+                expect(res.status).toBe(200)
+            })
+    })
+    it('it should edit existing ticket', function() {
+        return test(server)
+            .put('/ticket/12')
+            .set({Authorization: token})
+            .send({
+                title: "flex",
+                description: "I don't need to flex this unit",
+                user_id: 1
+            })
+            .then(res => {
+                expect(res.status).toBe(200)
+            })
+    })
+    it('it should return 404', function() {
+        return test(server)
+            .delete('/ticket/1200')
+            .set({Authorization: token})
+            .then(res => {
+                expect(res.status).toBe(404)
+                expect(res.body.message).toBe('ticket not found')
+            })
+    })
+    it('should return status 200', function() {
+        return test(server)
+            .get('/users')
+            .set({Authorization: token})
+            .then(res => {
+                console.log(token)
+                expect(res.status).toBe(200)
+            })
     })
 
+        it('it should create a new user', function() {
+            beforeEach(async() => {
+                await db('users').where({username: 'fred'}).del()
+            })
+            return test(server)
+                .post('/users')
+                .set({Authorization: token})
+                .send({
+                    username: "fred",
+                    password: "bedrock",
+                    email: "fflintstone@gmail.com"
+                })
+                .then(res => {
+                    expect(res.status).toBe(201)
+                })
+        })
+        it('should view a user', function() {
+            return test(server)
+                .get('/users/1')
+                .set({Authorization: token})
+                .then(res => {
+                    expect(res.status).toBe(200)
+                })
+        })
+        it('it should edit existing user', function() {
+            return test(server)
+                .put('/users/1')
+                .set({Authorization: token})
+                .send({
+                    username: 'admin',
+                    password: 'admin',
+                    email: 'posted@gmail.com'
+                })
+                .then(res => {
+                    expect(res.status).toBe(200)
+                })
+        })
+        it('it should return 404', function() {
+            return test(server)
+                .delete('/users/1200')
+                .set({Authorization: token})
+                .then(res => {
+                    expect(res.status).toBe(404)
+                })
+        })
+        it('should return 200', function() {
+            return test(server)
+                .get('/feedback')
+                .set({Authorization: token})
+                .then(res => {
+                    expect(res.status).toBe(200)
+                })
+        })
+        it('should return 200', function() {
+            return test(server)
+                .get('/feedback/1')
+                .set({Authorization: token})
+                .then(res => {
+                    expect(res.status).toBe(200)
+                })
+        })
+    })
 })

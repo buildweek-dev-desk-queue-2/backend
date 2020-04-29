@@ -5,6 +5,9 @@ const Users = require('./user-functions.js');
 const router = express.Router();
 
 router.get('/', (req, res) => {
+    console.log(res)
+    let auth = req.body.account_type;
+    
     Users.find()
     .then(users => {
         res.json(users);
