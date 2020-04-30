@@ -35,6 +35,13 @@ describe('biskoi tests', () => {
       // console.log(res.body)
    });
 
+   it('get to /feedback without logging in returns 400', async() => {
+      const res = await request(server)
+      .get('/feedback')
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty('message', 'invalid creds');
+   });
+
    it('get to /feedback will return feedback data', async() => {
       const res = await request(server)
       .get('/feedback')
@@ -76,6 +83,17 @@ describe('biskoi tests', () => {
       newFbId = newFb[0].id;
    });
 
+   it('post to /feedback/id returns 500 on bad data', async() => {
+      const res = await request(server)
+      .post('/feedback/1')
+      .set('authorization', token)
+      .send({
+         message: 'hey this is a test feedback post that should fail'
+      });
+
+      expect(res.status).toBe(500);
+   });
+
    it('get to /feedback/id/:id returns the correct feedback resource id', async() => {
       const res = await request(server)
       .get(`/feedback/id/${newFbId}`)
@@ -86,6 +104,22 @@ describe('biskoi tests', () => {
       expect(res.body.data).toHaveLength(1);
       expect(res.body.data[0]).toHaveProperty('feedback_id', newFbId)
    });
+
+   it('put to /feedback/id/:id modifies the correct feedback resource', async() => {
+      await request(server)
+      .put(`/feedback/id/${newFbId}`)
+      .set('authorization', token)
+      .send({
+         message: 'Hey I updated this message!'
+      });
+
+      const res = await request(server)
+      .get(`/feedback/id/${newFbId}`)
+      .set('authorization', token);
+      
+      expect(res.body.data[0]).toHaveProperty('message', 'Hey I updated this message!')
+
+   })
 
    it('delete to /feedback/id/:id deletes the correct feedback resource', async() => {
       await request(server)
