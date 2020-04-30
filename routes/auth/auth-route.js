@@ -43,7 +43,8 @@ router.post('/login', (req, res) => {
 function generateToken(user) {
     const payload = {
         userId: user.id,
-        username: user.username
+        username: user.username,
+        account_type: user.account_type
     };
     const secret = secrets.jwtSecret;
     const options = {
